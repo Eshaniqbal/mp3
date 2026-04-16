@@ -76,26 +76,26 @@ def progress_hook(d, job_id):
 async def run_conversion(url: str, job_id: str, job_dir: str):
     cookies_path = os.path.join(os.getcwd(), "cookies.txt")
     ydl_opts = {
-        'format': 'bestaudio/best',
+        'format': 'ba/b',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
         'outtmpl': os.path.join(job_dir, '%(title)s.%(ext)s'),
-        'quiet': False, # Set to False for better debugging
+        'quiet': False,
         'no_warnings': False,
         'progress_hooks': [lambda d: progress_hook(d, job_id)],
         'logger': MyLogger(),
         'nocheckcertificate': True,
         'geo_bypass': True,
         'prefer_ffmpeg': True,
-        'noplaylist': True, # Ensure we only download the specific video
+        'noplaylist': True,
         'restrictfilenames': True,
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         },
-        'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'web']}},
+        'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
     }
     
     if os.path.exists(cookies_path):
@@ -148,7 +148,7 @@ class Query:
             'no_warnings': True,
             'extract_flat': True,
             'noplaylist': False,
-            'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'web']}},
+            'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
         }
         
         if os.path.exists(cookies_path):
