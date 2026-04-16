@@ -4,8 +4,6 @@ anyio==4.13.0
 click==8.3.2
 cross-web==0.6.0
 fastapi==0.135.3
-graphql-core==3.2.8
-graphql-ws>=0.4.4
 h11==0.16.0
 idna==3.11
 packaging==26.1
@@ -15,7 +13,7 @@ python-dateutil==2.9.0.post0
 python-multipart==0.0.26
 six==1.17.0
 starlette==1.0.0
-strawberry-graphql==0.314.3
+strawberry-graphql[fastapi]==0.314.3
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 uvicorn==0.44.0
