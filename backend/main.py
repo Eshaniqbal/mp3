@@ -26,7 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DOWNLOAD_DIR = "downloads"
+import tempfile
+
+DOWNLOAD_DIR = os.path.join(tempfile.gettempdir(), "audioflow_downloads")
 if not os.path.exists(DOWNLOAD_DIR):
     os.makedirs(DOWNLOAD_DIR)
 
