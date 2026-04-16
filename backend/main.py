@@ -91,10 +91,11 @@ async def run_conversion(url: str, job_id: str, job_dir: str):
         'geo_bypass': True,
         'prefer_ffmpeg': True,
         'noplaylist': True, # Ensure we only download the specific video
+        'restrictfilenames': True,
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         },
-        'extractor_args': {'youtube': {'player_client': ['ios', 'web']}},
+        'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'web']}},
     }
     
     if os.path.exists(cookies_path):
@@ -147,7 +148,7 @@ class Query:
             'no_warnings': True,
             'extract_flat': True,
             'noplaylist': False,
-            'extractor_args': {'youtube': {'player_client': ['ios', 'web']}},
+            'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'web']}},
         }
         
         if os.path.exists(cookies_path):
