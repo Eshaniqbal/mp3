@@ -74,6 +74,7 @@ def progress_hook(d, job_id):
         job_progress[job_id] = 99.5
 
 async def run_conversion(url: str, job_id: str, job_dir: str):
+    cookies_path = os.path.join(os.getcwd(), "cookies.txt")
     ydl_opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -92,8 +93,12 @@ async def run_conversion(url: str, job_id: str, job_dir: str):
         'noplaylist': True, # Ensure we only download the specific video
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        }
+        },
+        'extractor_args': {'youtube': {'player_client': ['ios', 'web']}},
     }
+    
+    if os.path.exists(cookies_path):
+        ydl_opts['cookiefile'] = cookies_path
 
     try:
         loop = asyncio.get_event_loop()
@@ -135,12 +140,18 @@ class DownloadResponse:
 class Query:
     @strawberry.field
     async def metadata(self, url: str) -> Metadata:
+        # Check for cookies file
+        cookies_path = os.path.join(os.getcwd(), "cookies.txt")
         ydl_opts = {
             'quiet': True,
             'no_warnings': True,
             'extract_flat': True,
             'noplaylist': False,
+            'extractor_args': {'youtube': {'player_client': ['ios', 'web']}},
         }
+        
+        if os.path.exists(cookies_path):
+            ydl_opts['cookiefile'] = cookies_path
         
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -185,7 +196,15 @@ class Query:
         except Exception as e:
             # Fallback
             try:
-                with yt_dlp.YoutubeDL({'quiet': True, 'noplaylist': True}) as ydl:
+                fallback_opts = {
+                    'quiet': True, 
+                    'noplaylist': True,
+                    'extractor_args': {'youtube': {'player_client': ['ios', 'web']}}
+                }
+                if os.path.exists(cookies_path):
+                    fallback_opts['cookiefile'] = cookies_path
+
+                with yt_dlp.YoutubeDL(fallback_opts) as ydl:
                     info = ydl.extract_info(url, download=False)
                     return Metadata(
                         type="video",
